@@ -17,10 +17,15 @@ import java.util.List;
 public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHolder> {
 
     private List<Citas> citas = new ArrayList<>();
+    private OnCitaClickListener listener;
 
     public void setCitas(List<Citas> citas) {
         this.citas = citas;
         notifyDataSetChanged();
+    }
+
+    public void setOnCitaClickListener(OnCitaClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,11 +41,22 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
         holder.tvCliente.setText(cita.getCliente());
         holder.tvFecha.setText(cita.getFecha());
         holder.tvHora.setText(cita.getHora());
+
+        // Configurar clic en el elemento
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onCitaClick(cita); // Notificar al listener
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return citas.size();
+    }
+
+    public interface OnCitaClickListener {
+        void onCitaClick(Citas cita);
     }
 
     static class CitasViewHolder extends RecyclerView.ViewHolder {

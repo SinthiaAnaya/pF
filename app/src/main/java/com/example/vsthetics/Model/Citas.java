@@ -1,6 +1,8 @@
 package com.example.vsthetics.Model;
 
-public class Citas {
+import java.io.Serializable;
+
+public class Citas implements Serializable {
     private String id;
     private String cliente;
     private String fecha;

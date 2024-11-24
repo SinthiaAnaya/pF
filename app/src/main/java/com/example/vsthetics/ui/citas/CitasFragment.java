@@ -52,16 +52,18 @@ public class CitasFragment extends Fragment {
             adapter.setCitas(citas);
         });
 
-        Button btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
-        if (btnAgregarCita != null) {
-            btnAgregarCita.setOnClickListener(v -> {
-                Log.d("CitasFragment", "Botón agregar cita presionado");
-                Citas nuevaCita = new Citas(null, "Cliente Prueba", "2024-11-23", "10:00", "Corte de cabello");
-                citasViewModel.agregarCita(nuevaCita);
-            });
-        } else {
-            Log.e("CitasFragment", "Botón agregar cita no encontrado");
-        }
-    }
 
-}
+        Button btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
+        btnAgregarCita.setOnClickListener(v -> {
+            AgregarCitaDialog dialog = new AgregarCitaDialog();
+            dialog.setOnCitaAgregadaListener(cita -> {
+                Log.d("CitasFragment", "Nueva cita agregada: " + cita);
+                citasViewModel.agregarCita(cita);
+                Toast.makeText(getContext(), "Cita agregada", Toast.LENGTH_SHORT).show();
+            });
+            dialog.show(getParentFragmentManager(), "AgregarCitaDialog");
+        });
+
+
+
+    }}
