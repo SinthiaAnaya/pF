@@ -32,7 +32,12 @@ public class CitasFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_citas, container, false);
 
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("CitasFragment", "recargando citas");
+        citasViewModel.cargarCitasDesdeFirestore();
+    }
 
 
     @Override
