@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_clientes"
+        android:title="Clientes"
+        android:icon="@drawable/usuarios" />
+    <item
+        android:id="@+id/nav_servicios"
+        android:title="Servicios"
+        android:icon="@drawable/buzon" />
+    <item
+        android:id="@+id/nav_citas"
+        android:title="Citas"
+        android:icon="@drawable/calendario" />
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Cerrar Sesión"
+        android:icon="@drawable/salida" />
+</menu>
