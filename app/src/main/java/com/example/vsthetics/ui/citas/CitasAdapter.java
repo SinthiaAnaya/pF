@@ -1,5 +1,6 @@
 package com.example.vsthetics.ui.citas;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
 
     private List<Citas> citas = new ArrayList<>();
     private OnCitaClickListener listener;
+
+    public CitasAdapter(Context context) {
+    }
 
     public void setCitas(List<Citas> citas) {
         this.citas = citas;
@@ -57,6 +61,8 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
 
     public interface OnCitaClickListener {
         void onCitaClick(Citas cita);
+
+        void onCitaEliminar(Citas cita);
     }
 
     static class CitasViewHolder extends RecyclerView.ViewHolder {

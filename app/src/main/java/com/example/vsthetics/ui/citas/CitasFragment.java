@@ -20,9 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.vsthetics.DetallesCitaActivity;
 import com.example.vsthetics.Model.Citas;
 import com.example.vsthetics.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.List;
 
 public class CitasFragment extends Fragment {
 
