@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.vsthetics.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         firestore = FirebaseFirestore.getInstance();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true); //persistencia
         auth = FirebaseAuth.getInstance();
         DocumentReference docRef = firestore.collection("Usuarios").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
 
