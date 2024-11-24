@@ -1,9 +1,24 @@
 package com.example.vsthetics.Model;
 
-public class Usuarios {
+import java.io.Serializable;
+
+public class Usuarios implements Serializable {
     private String uid, nombre, correo, contra;
 
     public Usuarios() {
+    }
+
+    public Usuarios(String uid, String nombre, String correo, String contra) {
+        this.uid = uid;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.contra = contra;
+    }
+
+    public Usuarios(String uid, String nombre, String correo) {//usuario opcional sin contrasena
+        this.uid = uid;
+        this.nombre = nombre;
+        this.correo = correo;
     }
 
     public String getUid() {

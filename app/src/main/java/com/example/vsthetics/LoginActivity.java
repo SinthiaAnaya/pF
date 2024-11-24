@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.vsthetics.Model.Usuarios;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -59,7 +61,9 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
                             // Redirigir al MainActivity
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                            Usuarios usuarioactual = new Usuarios(auth.getCurrentUser().getUid(),auth.getCurrentUser().getDisplayName(),auth.getCurrentUser().getEmail());
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("auth",usuarioactual));
                             finish();
                         } else {
                             Toast.makeText(this, "Error al iniciar sesión: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
