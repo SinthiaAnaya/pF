@@ -1,6 +1,9 @@
 package com.example.vsthetics.ui.citas;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -46,6 +49,11 @@ public class AgregarCitaDialog extends DialogFragment {
         Button btnGuardar = view.findViewById(R.id.btnGuardar);
         Button btnCancelar = view.findViewById(R.id.btnCancelar);
 
+        // Mostrar el selector de fecha cuando el EditText de fecha se toque
+        etFecha.setOnClickListener(v -> mostrarSelectorFecha(etFecha));
+
+        // Mostrar el selector de hora cuando el EditText de hora se toque
+        etHora.setOnClickListener(v -> mostrarSelectorHora(etHora));
         btnGuardar.setOnClickListener(v -> {
             String cliente = etCliente.getText().toString();
             String fecha = etFecha.getText().toString();
@@ -65,7 +73,33 @@ public class AgregarCitaDialog extends DialogFragment {
 
         btnCancelar.setOnClickListener(v -> dismiss());
     }
+    private void mostrarSelectorFecha(EditText editTextFecha) {
+        Calendar calendar = Calendar.getInstance();
+        int año = calendar.get(Calendar.YEAR);
+        int mes = calendar.get(Calendar.MONTH);
+        int dia = calendar.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                (view, year, month, dayOfMonth) -> {
+                    String fechaSeleccionada = dayOfMonth + "/" + (month + 1) + "/" + year;
+                    editTextFecha.setText(fechaSeleccionada);
+                }, año, mes, dia);
+        datePickerDialog.show();
+    }
+
+    // Método para mostrar el selector de hora
+    private void mostrarSelectorHora(EditText editTextHora) {
+        Calendar calendar = Calendar.getInstance();
+        int hora = calendar.get(Calendar.HOUR_OF_DAY);
+        int minuto = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                (view, hourOfDay, minute) -> {
+                    String horaSeleccionada = String.format("%02d:%02d", hourOfDay, minute);
+                    editTextHora.setText(horaSeleccionada);
+                }, hora, minuto, true);
+        timePickerDialog.show();
+    }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setCancelable(false);
