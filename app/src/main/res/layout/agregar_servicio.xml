@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- EditText para el Cliente -->
     <EditText
         android:id="@+id/etCliente"
         android:layout_width="match_parent"
@@ -13,60 +12,43 @@
         android:hint="Cliente"
         android:inputType="textPersonName" />
 
-    <!-- EditText para la Fecha -->
     <EditText
         android:id="@+id/etFecha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Fecha (YYYY-MM-DD)"
-        android:inputType="date"
-        android:focusable="false"
-    android:clickable="true"
-    android:importantForAccessibility="yes" />
+        android:inputType="date" />
 
-    <!-- EditText para la Hora -->
     <EditText
         android:id="@+id/etHora"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Hora (HH:mm)"
-        android:inputType="time"
-        android:focusable="false"
-    android:clickable="true"
-    android:importantForAccessibility="yes" />
+        android:inputType="time" />
 
-    <!-- EditText para la Descripción -->
     <EditText
         android:id="@+id/etDescripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Descripción"
-        android:inputType="textMultiLine"
-        android:minHeight="80dp"
-        android:importantForAccessibility="yes" />
+        android:inputType="textMultiLine" />
 
-    <!-- Botones para Guardar y Cancelar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end"
-        android:paddingTop="16dp">
+        android:gravity="end">
 
         <Button
             android:id="@+id/btnCancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelar"
-            android:importantForAccessibility="yes" />
+            android:text="Cancelar" />
 
         <Button
             android:id="@+id/btnGuardar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guardar"
-            android:importantForAccessibility="yes" />
+            android:text="Guardar" />
     </LinearLayout>
-
 </LinearLayout>
-

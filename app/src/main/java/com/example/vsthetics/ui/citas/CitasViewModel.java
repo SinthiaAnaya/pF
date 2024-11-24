@@ -18,7 +18,7 @@ public class CitasViewModel extends ViewModel {
     private final MutableLiveData<List<Citas>> citasList = new MutableLiveData<>();
 
     public CitasViewModel() {
-        cargarCitas();
+        cargarCitasDesdeFirestore();
     }
 
     public LiveData<List<Citas>> getCitas() {
@@ -27,7 +27,7 @@ public class CitasViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
-    private void cargarCitas() {
+    public void cargarCitasDesdeFirestore() {
         isLoading.setValue(true);
         db.collection("Citas")
                 .get()
@@ -38,15 +38,15 @@ public class CitasViewModel extends ViewModel {
                         cita.setId(document.getId());
                         citas.add(cita);
                     });
-                    citasList.setValue(citas);
+                    citasList.setValue(citas); // Notifica a todos los observadores
                     isLoading.setValue(false);
                 })
                 .addOnFailureListener(e -> {
                     isLoading.setValue(false);
                     Log.e("FirestoreError", "Error al cargar citas", e);
-                    // Manejo de errores
                 });
     }
+
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -69,23 +69,43 @@ public class CitasViewModel extends ViewModel {
                 });
     }
 
+    public void actualizarCitaEnFirestore(String id, Citas cita) {
+        db.collection("Citas").document(id)
+                .set(cita)
+                .addOnSuccessListener(aVoid -> cargarCitasDesdeFirestore())
+                .addOnFailureListener(e -> Log.e("FirestoreError", "Error al actualizar cita", e));
+    }
 
     public void eliminarCita(String id) {
+        db.collection("Citas").document(id) // Referencia al documento por su ID
+                .delete() // Operación de eliminación
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "Cita eliminada exitosamente.");
+                    cargarCitasDesdeFirestore(); // Recargar las citas después de eliminar
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Error al eliminar cita", e);
+                });
+    }
+    public void eliminarCitaEnFirestore(String id) {
         db.collection("Citas").document(id)
                 .delete()
-                .addOnSuccessListener(aVoid -> cargarCitas())
-                .addOnFailureListener(e -> {
-                    // Manejo de errores
-                }).addOnFailureListener(e -> {
-                    Log.e("FirestoreError", "Error al cargar citas", e);
-                    // Agregar notificación al usuario
-                });
-        ;
+                .addOnSuccessListener(aVoid -> {
+                    List<Citas> currentList = citasList.getValue();
+                    if (currentList != null) {
+                        currentList.removeIf(cita -> cita.getId().equals(id));
+                        citasList.setValue(currentList); // Notificar cambios
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("FirestoreError", "Error al eliminar cita", e));
     }
+
+
+
     public void actualizarCita(String id, Citas cita) {
         db.collection("Citas").document(id)
                 .set(cita)
-                .addOnSuccessListener(aVoid -> cargarCitas())
+                .addOnSuccessListener(aVoid -> cargarCitasDesdeFirestore())
                 .addOnFailureListener(e -> {
                     // Manejo de errores
                 });
