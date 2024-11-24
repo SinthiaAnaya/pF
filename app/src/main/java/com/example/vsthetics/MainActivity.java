@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         DocumentReference docRef = firestore.collection("Usuarios").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
 
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {//para obtener informacion del usuario y guardarla en objeto para usar info en app
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {//obtener informacion del usuario desde firestore y guardarla en objeto para usar info en app
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         nombreUsuarioNav.setText(usuario.getNombre());
                         correoUsuarioNav.setText(usuario.getCorreo());
                     } else {
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "No existe usuario documento");
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-//        System.out.println("usuario iniciado es: "+usuario.getCorreo());
         setSupportActionBar(binding.appBarMain.toolbar);
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
