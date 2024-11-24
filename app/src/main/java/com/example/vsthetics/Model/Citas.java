@@ -1,24 +1,31 @@
 package com.example.vsthetics.Model;
 
 public class Citas {
+    private String id;
+    private String cliente;
+    private String fecha;
+    private String hora;
+    private String descripcion;
 
-        private String uid;
-        private String cliente;
-        private String fecha;
-        private String hora;
-        private String servicio;
+    // Constructor vacío necesario para Firebase
+    public Citas() {}
 
-        // Constructor vacío
-        public Citas() {}
-
-        // Getters y Setters
-
-    public String getUid() {
-        return uid;
+    // Constructor con parámetros
+    public Citas(String id, String cliente, String fecha, String hora, String descripcion) {
+        this.id = id;
+        this.cliente = cliente;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.descripcion = descripcion;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    // Getters y setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCliente() {
@@ -45,18 +52,12 @@ public class Citas {
         this.hora = hora;
     }
 
-    public String getServicio() {
-        return servicio;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setServicio(String servicio) {
-        this.servicio = servicio;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
-
-    @Override
-        public String toString() {
-            return cliente + " - " + fecha + " - " + hora + " - " + servicio;
-        }
-    }
-
+}
 
