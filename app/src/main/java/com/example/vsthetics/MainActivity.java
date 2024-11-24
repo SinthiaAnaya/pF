@@ -1,14 +1,23 @@
 package com.example.vsthetics;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.HeaderViewListAdapter;
+import android.widget.TextView;
 
+import com.example.vsthetics.Model.Usuarios;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -18,11 +27,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.vsthetics.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
+    public Usuarios usuario = new Usuarios();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +47,41 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        DrawerLayout drawer = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
+        View headerView = navigationView.getHeaderView(0);
+        TextView nombreUsuarioNav = headerView.findViewById(R.id.menu_user_name);
+        TextView correoUsuarioNav = headerView.findViewById(R.id.menu_user_email);
 
 
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        DocumentReference docRef = firestore.collection("Usuarios").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {//para obtener informacion del usuario y guardarla en objeto para usar info en app
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        System.out.println("this bro name is: "+document.getString("nombre"));
+                        usuario.setNombre(document.getString("nombre"));
+                        usuario.setCorreo(document.getString("email"));
+
+                        nombreUsuarioNav.setText(usuario.getNombre());
+                        correoUsuarioNav.setText(usuario.getCorreo());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
 
 
+//        System.out.println("usuario iniciado es: "+usuario.getCorreo());
         setSupportActionBar(binding.appBarMain.toolbar);
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAnchorView(R.id.fab).show();
             }
         });
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_citas, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)

@@ -41,6 +41,7 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
         holder.tvCliente.setText(cita.getCliente());
         holder.tvFecha.setText(cita.getFecha());
         holder.tvHora.setText(cita.getHora());
+        holder.tvDescripcion.setText(cita.getDescripcion());
 
         // Configurar clic en el elemento
         holder.itemView.setOnClickListener(v -> {
@@ -60,13 +61,14 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     }
 
     static class CitasViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCliente, tvFecha, tvHora;
+        TextView tvCliente, tvFecha, tvHora, tvDescripcion;
 
         public CitasViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCliente = itemView.findViewById(R.id.tvCliente);
             tvFecha = itemView.findViewById(R.id.tvFecha);
             tvHora = itemView.findViewById(R.id.tvHora);
+            tvDescripcion = itemView.findViewById(R.id.tvDescripcion);
         }
     }
 }
