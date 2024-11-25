@@ -3,6 +3,7 @@ package com.example.vsthetics.Model;
 
 
 import java.io.Serializable;
+import java.util.Base64;
 
 public class Servicios implements Serializable {
 
@@ -11,6 +12,8 @@ public class Servicios implements Serializable {
     private String descripcion;    // Descripción del servicio
     private double precio;         // Precio del servicio
     private int duracion;          // Duración del servicio en minutos
+
+    private String foto;
 
     // Constructor vacío necesario para Firestore y otras operaciones
     public Servicios() {}
@@ -22,6 +25,15 @@ public class Servicios implements Serializable {
         this.descripcion = descripcion;
         this.precio = precio;
         this.duracion = duracion;
+    }
+
+    public Servicios(String uid, String nombre, String descripcion, double precio, int duracion, String foto) {
+        this.uid = uid;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.duracion = duracion;
+        this.foto = foto;
     }
 
     // Getters y setters
@@ -63,6 +75,14 @@ public class Servicios implements Serializable {
 
     public void setDuracion(int duracion) {
         this.duracion = duracion;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     // Método toString() para representar el objeto como una cadena
