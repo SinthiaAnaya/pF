@@ -105,7 +105,7 @@ public class AgregarCitaDialog extends DialogFragment {
 
         if ("cliente".equals(tipoUsuario)) {
             // Obtener datos del cliente y servicio desde la base de datos
-            cargarDatosClienteYServicio(etCliente, etDescripcion, servicioId,spServicio);
+            cargarDatosClienteYServicio(etCliente, etDescripcion, servicioId,spServicio,spEstado);
 
             // Deshabilitar edición de ciertos campos
             etCliente.setEnabled(false);
@@ -137,7 +137,7 @@ public class AgregarCitaDialog extends DialogFragment {
 
         btnCancelar.setOnClickListener(v -> dismiss());
     }
-    private void cargarDatosClienteYServicio(EditText etCliente, EditText etDescripcion, String servicioId, Spinner spServicio) {
+    private void cargarDatosClienteYServicio(EditText etCliente, EditText etDescripcion, String servicioId, Spinner spServicio, Spinner spEstado) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -150,38 +150,67 @@ public class AgregarCitaDialog extends DialogFragment {
                 DocumentSnapshot clienteSnapshot = taskCliente.getResult();
                 String nombreCliente = clienteSnapshot.getString("nombre");
 
-                // Obtener datos del servicio
-                DocumentReference servicioDoc = firestore.collection("Servicios").document(servicioId);
-                servicioDoc.get().addOnCompleteListener(taskServicio -> {
-                    if (taskServicio.isSuccessful() && taskServicio.getResult() != null) {
-                        DocumentSnapshot servicioSnapshot = taskServicio.getResult();
-                        String descripcionServicio = servicioSnapshot.getString("descripcion");
-                        String nombreServicio = servicioSnapshot.getString("nombre"); // Nombre del servicio
+                if ("0".equals(servicioId) || servicioId == null) {
+                    // Fetch all services if servicioId is "0" or null
+                    firestore.collection("Servicios")
+                            .get()
+                            .addOnCompleteListener(taskServicios -> {
+                                if (taskServicios.isSuccessful() && taskServicios.getResult() != null) {
+                                    List<String> serviciosList = new ArrayList<>();
+                                    for (QueryDocumentSnapshot document : taskServicios.getResult()) {
+                                        String nombreServicio = document.getString("nombre");
+                                        if (nombreServicio != null) {
+                                            serviciosList.add(nombreServicio);
+                                        }
+                                    }
+                                    // Set Spinner adapter with all services
+                                    ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
+                                            android.R.layout.simple_spinner_item, serviciosList);
+                                    servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spServicio.setAdapter(servicioAdapter);
 
-                        // Crear una lista con los nombres de servicios
-                        List<String> serviciosList = new ArrayList<>();
-                        serviciosList.add(nombreServicio);  // Agregar el nombre del servicio
+                                    // Optionally, update the description field
+                                    requireActivity().runOnUiThread(() -> {
+                                        etCliente.setEnabled(true);
+                                        etDescripcion.setEnabled(true);
+                                    });
+                                } else {
+                                    Log.e("Firestore", "Error al obtener los servicios: " + taskServicios.getException());
+                                }
+                            });
+                } else {
+                    // Fetch specific service by ID
+                    DocumentReference servicioDoc = firestore.collection("Servicios").document(servicioId);
+                    servicioDoc.get().addOnCompleteListener(taskServicio -> {
+                        if (taskServicio.isSuccessful() && taskServicio.getResult() != null) {
+                            DocumentSnapshot servicioSnapshot = taskServicio.getResult();
+                            String descripcionServicio = servicioSnapshot.getString("descripcion");
+                            String nombreServicio = servicioSnapshot.getString("nombre");
 
-                        // Configurar el Spinner con el nombre del servicio
-                        ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
-                                android.R.layout.simple_spinner_item, serviciosList);
-                        servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spServicio.setAdapter(servicioAdapter);
-                        // Actualizar UI
-                        requireActivity().runOnUiThread(() -> {
+                            List<String> serviciosList = new ArrayList<>();
+                            serviciosList.add(nombreServicio);
 
-                            etCliente.setText(nombreCliente);
-                            etDescripcion.setText(nombreServicio+" : "+descripcionServicio);
-                        });
-                    } else {
-                        Log.e("Firestore", "Error al obtener los datos del servicio: " + taskServicio.getException());
-                    }
-                });
+                            ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
+                                    android.R.layout.simple_spinner_item, serviciosList);
+                            servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spServicio.setAdapter(servicioAdapter);
+
+                            requireActivity().runOnUiThread(() -> {
+                                etCliente.setText(nombreCliente);
+                                etDescripcion.setText(nombreServicio + " : " + descripcionServicio);
+                                spEstado.setVisibility(View.GONE);
+                            });
+                        } else {
+                            Log.e("Firestore", "Error al obtener los datos del servicio: " + taskServicio.getException());
+                        }
+                    });
+                }
             } else {
                 Log.e("Firestore", "Error al obtener los datos del cliente: " + taskCliente.getException());
             }
         });
     }
+
 
     private void mostrarSelectorFecha(EditText editTextFecha) {
         Calendar calendar = Calendar.getInstance();
