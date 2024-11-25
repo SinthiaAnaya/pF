@@ -8,17 +8,26 @@ public class Usuarios implements Serializable {
     public Usuarios() {
     }
 
-    public Usuarios(String uid, String nombre, String correo, String contra) {
+    public Usuarios(String uid, String nombre, String correo, String contra, String tipo) {
         this.uid = uid;
         this.nombre = nombre;
         this.correo = correo;
         this.contra = contra;
+        this.tipo = tipo;
     }
 
     public Usuarios(String uid, String nombre, String correo) {//usuario opcional sin contrasena
         this.uid = uid;
         this.nombre = nombre;
         this.correo = correo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getUid() {
