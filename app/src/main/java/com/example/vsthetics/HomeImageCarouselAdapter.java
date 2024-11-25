@@ -60,6 +60,10 @@ public class HomeImageCarouselAdapter extends RecyclerView.Adapter<HomeImageCaro
                 servicio.getDescripcion() != null ? servicio.getDescripcion() : "Descripción no disponible"
         );
 
+        holder.tvServPrecio.setText("$"+
+                (String.valueOf(servicio.getPrecio()) != null ? String.valueOf(servicio.getPrecio()) : "")
+        );
+
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onClick(holder.imageView, servicio);
@@ -77,12 +81,13 @@ public class HomeImageCarouselAdapter extends RecyclerView.Adapter<HomeImageCaro
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView tvServTitulo, tvServSub;
+        TextView tvServTitulo, tvServSub, tvServPrecio;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvServTitulo = itemView.findViewById(R.id.tvServicioTitulo);
             tvServSub = itemView.findViewById(R.id.tvServicioSubtitulo);
             imageView = itemView.findViewById(R.id.list_item_image);
+            tvServPrecio = itemView.findViewById(R.id.tvServicioPrecio);
         }
     }
 

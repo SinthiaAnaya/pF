@@ -171,7 +171,7 @@ public class AgregarCitaDialog extends DialogFragment {
                         requireActivity().runOnUiThread(() -> {
 
                             etCliente.setText(nombreCliente);
-                            etDescripcion.setText(descripcionServicio);
+                            etDescripcion.setText(nombreServicio+" : "+descripcionServicio);
                         });
                     } else {
                         Log.e("Firestore", "Error al obtener los datos del servicio: " + taskServicio.getException());
