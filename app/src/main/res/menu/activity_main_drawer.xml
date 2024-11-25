@@ -14,8 +14,13 @@
             android:title="@string/menu_citas_admin" />
         <item
             android:id="@+id/nav_citascliente"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/calendario"
             android:title="@string/menu_citascliente" />
+
+        <item
+            android:id="@+id/nav_pagos"
+            android:icon="@drawable/pago"
+            android:title="@string/menu_pagos" />
 
     </group>
 </menu>

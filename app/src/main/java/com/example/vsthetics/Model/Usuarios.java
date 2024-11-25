@@ -61,12 +61,7 @@ public class Usuarios implements Serializable {
     public void setContra(String contra) {
         this.contra = contra;
     }
-    public String getTipo() {
-        return tipo;
-    }
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+
     @Override
     public String toString() {
         return nombre;

@@ -23,6 +23,7 @@
     <string name="menu_gallery">Citas</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_citascliente">Mis Citas</string>
+    <string name="menu_pagos">Pagos</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fab_add_appointment">Agregar nueva cita</string>
@@ -48,5 +49,20 @@
         <item>Este mes</item>
         <item>Personalizado...</item>
     </string-array>
+
+        <string-array name="metodos_pago">
+            <item>Tarjeta</item>
+            <item>Efectivo</item>
+            <item>Transferencia</item>
+            <item>Cheque</item>
+        </string-array>
+
+        <string-array name="estado_pagos">
+            <item>Pendiente</item>
+            <item>Completado</item>
+            <item>Fallido</item>
+        </string-array>
+
+
 
 </resources>
