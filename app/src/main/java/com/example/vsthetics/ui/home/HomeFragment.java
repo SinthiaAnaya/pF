@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vsthetics.HomeImageCarouselAdapter;
+import com.example.vsthetics.Model.Citas;
 import com.example.vsthetics.Model.Servicios;
 import com.example.vsthetics.databinding.FragmentHomeBinding;
 import com.example.vsthetics.ui.citas.AgregarCitaDialog;
@@ -29,12 +30,12 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomeImageCarouselAdapter adapter;
     private List<Servicios> serviciosList = new ArrayList<>();
-    private CitasViewModel citasViewModel;
+    private CitasViewModel citasViewModel; // Asegúrate de declarar el ViewModel aquí
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        // Inicializa el ViewModel
+        citasViewModel = new ViewModelProvider(this).get(CitasViewModel.class); // Obtener el ViewModel
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -43,9 +44,6 @@ public class HomeFragment extends Fragment {
 
         cargarServicios(recyclerView, adapter);
 
-
-//        final TextView textView = binding.textHome;
-//        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
@@ -70,7 +68,8 @@ public class HomeFragment extends Fragment {
                                 Servicios servicio = document.toObject(Servicios.class);
                                 servicio.setUid(document.getId());
                                 if (servicio != null) {
-                                    if (servicio.getNombre() == null) { // datos temporales si el Servicio todavia no se termina de agregar
+                                    // Valores predeterminados en caso de que falten datos
+                                    if (servicio.getNombre() == null) {
                                         servicio.setNombre("Agregando...");
                                     }
                                     if (servicio.getDescripcion() == null) {
@@ -84,14 +83,12 @@ public class HomeFragment extends Fragment {
                                     }
                                     serviciosList.add(servicio);
                                 }
-
-
-                            }catch (Exception ex){
-
+                            } catch (Exception ex) {
+                                Log.e("FirestoreError", "Error al procesar el servicio", ex);
                             }
-
                         }
-                        // Dentro del RecyclerView Adapter
+
+                        // Configuración del RecyclerView y manejo de clics en el adapter
                         adapter.setOnItemClickListener((imageView, servicio) -> {
                             Log.d("RecyclerView", "Clic item: " + servicio.getUid());
 
@@ -102,23 +99,24 @@ public class HomeFragment extends Fragment {
                                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 cita.setUid(userId); // Establece el UID del cliente en la cita
 
-                                // Agregar la cita usando el ViewModel o la lógica adecuada
-                                citasViewModel.agregarCita(cita);
-
-                                // Muestra un mensaje de éxito
-                                Toast.makeText(getContext(), "Cita agregada", Toast.LENGTH_SHORT).show();
+                                // Verifica que el ViewModel no sea null antes de agregar la cita
+                                if (citasViewModel != null) {
+                                    citasViewModel.agregarCita(cita); // Llama al método para agregar la cita
+                                    // Muestra un mensaje de éxito
+                                    Toast.makeText(getContext(), "Cita agregada", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.e("Error", "CitasViewModel no está inicializado");
+                                }
                             });
 
                             // Mostrar el diálogo
                             dialog.show(getChildFragmentManager(), "AgregarCitaDialog");
                         });
 
-// Configura el adapter y el RecyclerView
+                        // Configura el adapter y el RecyclerView
                         recyclerView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-
                     }
                 });
     }
 }
-

@@ -26,6 +26,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AgregarCitaDialog extends DialogFragment {
 
@@ -65,19 +69,43 @@ public class AgregarCitaDialog extends DialogFragment {
         Button btnGuardar = view.findViewById(R.id.btnGuardar);
         Button btnCancelar = view.findViewById(R.id.btnCancelar);
         Spinner spEstado = view.findViewById(R.id.spEstado);
+        Spinner spServicio = view.findViewById(R.id.spTipoServicio);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.cita_estados, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spEstado.setAdapter(adapter);
         spEstado.setSelection(1); //Pendiente como default
-
+        // Consultar los servicios desde Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("servicios") // Reemplaza "servicios" con el nombre de tu colección
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> servicios = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Asegúrate de que la clave "nombre" es la que contiene el nombre del servicio
+                            String servicioNombre = document.getString("nombre");
+                            if (servicioNombre != null) {
+                                servicios.add(servicioNombre);
+                            }
+                        }
+                        // Poblamos el Spinner con los datos obtenidos de Firestore
+                        ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
+                                android.R.layout.simple_spinner_item, servicios);
+                        servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spServicio.setAdapter(servicioAdapter);
+                    } else {
+                        // En caso de error al obtener los datos
+                        Log.e("Firestore", "Error getting documents: ", task.getException());
+                    }
+                });
         // Verificar si es cliente o administrador
         String tipoUsuario = getArguments() != null ? getArguments().getString("tipo_usuario") : "admin";
         String servicioId = getArguments() != null ? getArguments().getString("servicio_id") : null;
 
         if ("cliente".equals(tipoUsuario)) {
             // Obtener datos del cliente y servicio desde la base de datos
-            cargarDatosClienteYServicio(etCliente, etDescripcion, servicioId);
+            cargarDatosClienteYServicio(etCliente, etDescripcion, servicioId,spServicio);
 
             // Deshabilitar edición de ciertos campos
             etCliente.setEnabled(false);
@@ -94,6 +122,7 @@ public class AgregarCitaDialog extends DialogFragment {
             String hora = etHora.getText().toString();
             String descripcion = etDescripcion.getText().toString();
             String estado = spEstado.getSelectedItem().toString();
+            String servicio = spServicio.getSelectedItem().toString();
 
             if (TextUtils.isEmpty(cliente) || TextUtils.isEmpty(fecha) || TextUtils.isEmpty(hora) || TextUtils.isEmpty(descripcion)) {
                 Toast.makeText(getContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
@@ -101,14 +130,14 @@ public class AgregarCitaDialog extends DialogFragment {
             }
 
             if (listener != null) {
-                listener.onCitaAgregada(new Citas(null, cliente, fecha, hora, descripcion, estado));
+                listener.onCitaAgregada(new Citas(null, cliente, fecha, hora, descripcion, estado, servicio));
             }
             dismiss(); // Cierra el diálogo
         });
 
         btnCancelar.setOnClickListener(v -> dismiss());
     }
-    private void cargarDatosClienteYServicio(EditText etCliente, EditText etDescripcion, String servicioId) {
+    private void cargarDatosClienteYServicio(EditText etCliente, EditText etDescripcion, String servicioId, Spinner spServicio) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -127,9 +156,20 @@ public class AgregarCitaDialog extends DialogFragment {
                     if (taskServicio.isSuccessful() && taskServicio.getResult() != null) {
                         DocumentSnapshot servicioSnapshot = taskServicio.getResult();
                         String descripcionServicio = servicioSnapshot.getString("descripcion");
+                        String nombreServicio = servicioSnapshot.getString("nombre"); // Nombre del servicio
 
+                        // Crear una lista con los nombres de servicios
+                        List<String> serviciosList = new ArrayList<>();
+                        serviciosList.add(nombreServicio);  // Agregar el nombre del servicio
+
+                        // Configurar el Spinner con el nombre del servicio
+                        ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
+                                android.R.layout.simple_spinner_item, serviciosList);
+                        servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spServicio.setAdapter(servicioAdapter);
                         // Actualizar UI
                         requireActivity().runOnUiThread(() -> {
+
                             etCliente.setText(nombreCliente);
                             etDescripcion.setText(descripcionServicio);
                         });
