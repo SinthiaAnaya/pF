@@ -1,34 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundLightMinimalista"
     tools:context=".MainActivity">
 
+    <!-- AppBar con color personalizado -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.VSthetics.AppBarOverlay">
+        android:theme="@style/Theme.VSthetics.AppBarOverlay"
+        android:background="@color/melon">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.VSthetics.PopupOverlay" />
-
+            android:background="@color/melon"
+            android:elevation="4dp"
+            app:popupTheme="@style/Theme.VSthetics.PopupOverlay"
+            app:contentInsetStartWithNavigation="0dp" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Contenido principal -->
     <include layout="@layout/content_main" />
 
+    <!-- Botón de acción flotante -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/btnAgregarCita"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:tint="@color/white"
+        android:backgroundTint="@color/lilac"
+        app:srcCompat="@drawable/mas"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

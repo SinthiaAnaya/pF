@@ -1,27 +1,20 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/backgroundSoft"
     android:padding="16dp">
 
-    <!-- Botón para agregar elementos -->
     <Button
         android:id="@+id/btnAgregarCita"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar Cita"
-        android:backgroundTint="@color/pastelPurple"
-        android:textColor="@color/white"
-        android:layout_marginBottom="16dp" />
+        android:text="Agregar Cita" />
 
-    <!-- RecyclerView para mostrar tarjetas -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCitas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp" />
-</LinearLayout>
+        android:layout_marginTop="16dp" />
 
+</LinearLayout>
