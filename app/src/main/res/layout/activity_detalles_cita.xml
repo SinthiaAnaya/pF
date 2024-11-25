@@ -38,6 +38,13 @@
         android:inputType="textMultiLine"
         android:minLines="3" />
 
+    <Spinner
+        android:id="@+id/spEstado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/cita_estados"
+        android:spinnerMode="dropdown" />
+
     <Button
         android:id="@+id/btnGuardar"
         android:layout_width="match_parent"
