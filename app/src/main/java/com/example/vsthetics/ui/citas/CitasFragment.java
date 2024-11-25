@@ -30,6 +30,8 @@ public class CitasFragment extends Fragment {
     private CitasViewModel citasViewModel;
     private CitasAdapter adapter;
 
+    Spinner spinnerEstado;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,6 +44,7 @@ public class CitasFragment extends Fragment {
         super.onResume();
         Log.d("CitasFragment", "recargando citas");
         citasViewModel.cargarCitasDesdeFirestore();
+        spinnerEstado.setSelection(0);
     }
 
 
@@ -57,39 +60,66 @@ public class CitasFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // Observador para actualizar la lista
-        citasViewModel.getCitas().observe(getViewLifecycleOwner(), citas -> adapter.setCitas(citas));
 
         // Filtros
         Spinner spinnerFecha = view.findViewById(R.id.spinnerFiltroFecha);
-        Spinner spinnerEstado = view.findViewById(R.id.spinnerFiltroEstado);
+        spinnerEstado = view.findViewById(R.id.spinnerFiltroEstado);
+        spinnerEstado.setSelection(0);
+        spinnerFecha.setSelection(0);
 
+//        citasViewModel.filtrarCitasPorFecha("desde el principio");
         // Configurar listeners para los filtros
         spinnerFecha.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String fechaFiltro = parent.getItemAtPosition(position).toString();
-                citasViewModel.filtrarCitasPorFecha(fechaFiltro);
+                if(parent.getSelectedItemPosition() > 0){
+                    String fechaFiltro = parent.getItemAtPosition(position).toString();
+                    citasViewModel.getFilteredCitas().observe(getViewLifecycleOwner(), citas -> {
+                        adapter.setCitas(citas);  //MOSTRAR LISTA FILTRADA
+                    });
+                    citasViewModel.filtrarCitasPorFecha(fechaFiltro);
+                    spinnerEstado.setSelection(0);
+                }else{
+                    citasViewModel.getCitas().observe(getViewLifecycleOwner(), citas -> {
+                        adapter.setCitas(citas);  //MOSTRAR LISTA ORIGINAL
+                    });
+                }
+
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String estadoFiltro = parent.getItemAtPosition(position).toString();
-                citasViewModel.filtrarCitasPorEstado(estadoFiltro);
+                if(parent.getSelectedItemPosition() > 0){
+                    String estadoFiltro = parent.getItemAtPosition(position).toString();
+                    citasViewModel.getFilteredCitas().observe(getViewLifecycleOwner(), citas -> {
+                        adapter.setCitas(citas);  //MOSTRAR LISTA FILTRADA
+                    });
+                    citasViewModel.filtrarCitasPorEstado(estadoFiltro);
+                    spinnerFecha.setSelection(0);
+                }else{
+                    citasViewModel.getCitas().observe(getViewLifecycleOwner(), citas -> {
+                        adapter.setCitas(citas);  //MOSTRAR LISTA ORIGINAL
+                    });
+                }
+
+
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         // Botón para agregar cita
         FloatingActionButton btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
         btnAgregarCita.setOnClickListener(v -> {
-            AgregarCitaDialog dialog = AgregarCitaDialog.newInstance("admin", null);
+            AgregarCitaDialog dialog = new AgregarCitaDialog();
             dialog.setOnCitaAgregadaListener(cita -> {
                 cita.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 citasViewModel.agregarCita(cita);
@@ -104,6 +134,7 @@ public class CitasFragment extends Fragment {
             public void onCitaClick(Citas cita) {
                 Intent intent = new Intent(getContext(), DetallesCitaActivity.class);
                 intent.putExtra("cita", cita);
+
                 startActivity(intent);
             }
 
@@ -129,5 +160,4 @@ public class CitasFragment extends Fragment {
     }
 
 
-        }
-
+}
