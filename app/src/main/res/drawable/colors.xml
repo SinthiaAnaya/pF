@@ -6,4 +6,10 @@
         tools:ignore="ExtraText">#F2865E</color>
     <color android:name="colorPrimaryLight">#F2A099</color>
     <color android:name="colorAccent">#F2865E</color>
+    <color android:name="colorPrimaryMinimalista">#F28972</color>
+    <color android:name="colorAccentMinimalista">#D2BAD9</color>
+    <color android:name="backgroundLightMinimalista">#F2F2F2</color>
+    <color android:name="textLightMinimalista">#CCADD9</color>
+    <color android:name="textDarkMinimalista">#0D0D0D</color>
+    <color android:name="white">#FFFFFF</color>
 </resources>

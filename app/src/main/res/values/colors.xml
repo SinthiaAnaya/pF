@@ -5,4 +5,26 @@
     <color name="colorPrimary">#F2865E</color>
     <color name="colorPrimaryLight">#F2A099</color>
     <color name="colorAccent">#F2865E</color>
+
+    <color name="gray">#808080</color>
+    <color name="colorPrimaryMinimalista">#F28972</color>
+    <color name="colorAccentMinimalista">#D2BAD9</color>
+    <color name="backgroundLightMinimalista">#F2F2F2</color>
+    <color name="textLightMinimalista">#CCADD9</color>
+    <color name="textDarkMinimalista">#0D0D0D</color>
+    <color name="pastelPink">#F8BBD0</color>
+    <color name="pastelPurple">#CE93D8</color>
+    <color name="backgroundSoft">#F3E5F5</color>
+
+    <color name="textDark">#212121</color>
+    <color name="textLight">#757575</color>
+    <color name="melon">#F4B2B4</color>
+    <color name="magnolia">#F7F0F6</color>
+   
+    <color name="lilac">#D2AEDC</color>
+    <color name="pink_lavender">#DDBADB</color>
+
+
+
+
 </resources>
