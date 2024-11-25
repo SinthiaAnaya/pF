@@ -117,6 +117,7 @@ public class DetallesCitaActivity extends AppCompatActivity {
         citasViewModel.actualizarCitaEnFirestore(cita.getId(), cita);
 
         Toast.makeText(this, "Cita actualizada", Toast.LENGTH_SHORT).show();
+
         finish();
     }
 

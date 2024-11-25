@@ -30,6 +30,8 @@ public class CitasFragment extends Fragment {
     private CitasViewModel citasViewModel;
     private CitasAdapter adapter;
 
+    Spinner spinnerEstado;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,6 +44,7 @@ public class CitasFragment extends Fragment {
         super.onResume();
         Log.d("CitasFragment", "recargando citas");
         citasViewModel.cargarCitasDesdeFirestore();
+        spinnerEstado.setSelection(0);
     }
 
 
@@ -60,7 +63,7 @@ public class CitasFragment extends Fragment {
 
         // Filtros
         Spinner spinnerFecha = view.findViewById(R.id.spinnerFiltroFecha);
-        Spinner spinnerEstado = view.findViewById(R.id.spinnerFiltroEstado);
+        spinnerEstado = view.findViewById(R.id.spinnerFiltroEstado);
         spinnerEstado.setSelection(0);
         spinnerFecha.setSelection(0);
 
@@ -131,6 +134,7 @@ public class CitasFragment extends Fragment {
             public void onCitaClick(Citas cita) {
                 Intent intent = new Intent(getContext(), DetallesCitaActivity.class);
                 intent.putExtra("cita", cita);
+
                 startActivity(intent);
             }
 

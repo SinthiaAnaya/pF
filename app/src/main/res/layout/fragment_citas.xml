@@ -14,6 +14,7 @@
         android:layout_marginEnd="16dp"
         android:padding="8dp"
         android:spinnerMode="dropdown"
+        android:visibility="invisible"
         android:entries="@array/filtro_fecha_opciones" />
 
     <!-- Selector de Estado (Filtro) -->
