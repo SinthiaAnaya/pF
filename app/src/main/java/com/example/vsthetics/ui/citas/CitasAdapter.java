@@ -20,14 +20,24 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     private List<Citas> citas = new ArrayList<>();
     private OnCitaClickListener listener;
 
+
+
+
+
+    private Context context; // Contexto para operaciones específicas
+
     public CitasAdapter(Context context) {
+        this.context = context; // Guardar el contexto si es necesario
     }
 
+
+    // Método para establecer la lista de citas
     public void setCitas(List<Citas> citas) {
         this.citas = citas;
-        notifyDataSetChanged();
+        notifyDataSetChanged(); // Notificar cambios en la lista
     }
 
+    // Método para establecer el listener
     public void setOnCitaClickListener(OnCitaClickListener listener) {
         this.listener = listener;
     }
@@ -42,6 +52,8 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     @Override
     public void onBindViewHolder(@NonNull CitasViewHolder holder, int position) {
         Citas cita = citas.get(position);
+
+        // Configurar datos de la cita
         holder.tvCliente.setText(cita.getCliente());
         holder.tvFecha.setText(cita.getFecha());
         holder.tvHora.setText(cita.getHora());
@@ -53,6 +65,14 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
                 listener.onCitaClick(cita); // Notificar al listener
             }
         });
+
+        // Configurar clic para eliminar
+        holder.itemView.setOnLongClickListener(v -> {
+            if (listener != null) {
+                listener.onCitaEliminar(cita); // Notificar al listener de eliminación
+            }
+            return true;
+        });
     }
 
     @Override
@@ -60,17 +80,20 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
         return citas.size();
     }
 
+    // Interfaz para manejar eventos de clic
     public interface OnCitaClickListener {
-        void onCitaClick(Citas cita);
-
-        void onCitaEliminar(Citas cita);
+        void onCitaClick(Citas cita); // Abrir detalles
+        void onCitaEliminar(Citas cita); // Eliminar cita
     }
 
+    // Clase interna ViewHolder
     static class CitasViewHolder extends RecyclerView.ViewHolder {
         TextView tvCliente, tvFecha, tvHora, tvEstado;
 
         public CitasViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            // Asignar las vistas
             tvCliente = itemView.findViewById(R.id.tvCliente);
             tvFecha = itemView.findViewById(R.id.tvFecha);
             tvHora = itemView.findViewById(R.id.tvHora);
@@ -78,3 +101,4 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
         }
     }
 }
+

@@ -1,5 +1,6 @@
 package com.example.vsthetics.ui.citas;
 
+import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -10,8 +11,11 @@ import com.example.vsthetics.Model.Citas;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CitasViewModel extends ViewModel {
 
@@ -133,6 +137,26 @@ public class CitasViewModel extends ViewModel {
                 .addOnFailureListener(e -> {
                     // Manejo de errores
                 });
+    }
+
+    public void filtrarCitasPorFecha(String fechaFiltro) {
+        List<Citas> citasOriginales = citasList.getValue();
+        if (citasOriginales != null) {
+            List<Citas> citasFiltradas = citasOriginales.stream()
+                    .filter(cita -> cita.getFecha().equals(fechaFiltro))
+                    .collect(Collectors.toList());
+            citasList.setValue(citasFiltradas);
+        }
+    }
+
+    public void filtrarCitasPorEstado(String estadoFiltro) {
+        List<Citas> citasOriginales = citasList.getValue();
+        if (citasOriginales != null) {
+            List<Citas> citasFiltradas = citasOriginales.stream()
+                    .filter(cita -> cita.getEstado().equals(estadoFiltro))
+                    .collect(Collectors.toList());
+            citasList.setValue(citasFiltradas);
+        }
     }
 
 

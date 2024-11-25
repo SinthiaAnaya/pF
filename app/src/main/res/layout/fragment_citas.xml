@@ -1,20 +1,55 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnAgregarCita"
-        android:layout_width="match_parent"
+    <!-- Selector de Fechas (Filtro) -->
+    <Spinner
+        android:id="@+id/spinnerFiltroFecha"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agregar Cita" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:padding="8dp"
+        android:spinnerMode="dropdown"
+        android:entries="@array/filtro_fecha_opciones" />
 
+    <!-- Selector de Estado (Filtro) -->
+    <Spinner
+        android:id="@+id/spinnerFiltroEstado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/spinnerFiltroFecha"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:spinnerMode="dropdown"
+        android:entries="@array/cita_estados" />
+
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCitas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
+        android:layout_below="@id/spinnerFiltroFecha"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
 
-</LinearLayout>
+    <!-- FloatingActionButton para agregar cita -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAgregarCita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/fab_add_appointment"
+        android:tint="@color/white"
+        android:backgroundTint="@color/pastelPurple"
+        app:srcCompat="@drawable/mas" />
+</RelativeLayout>
+
+

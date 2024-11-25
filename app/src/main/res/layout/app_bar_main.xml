@@ -27,17 +27,6 @@
     <!-- Contenido principal -->
     <include layout="@layout/content_main" />
 
-    <!-- Botón de acción flotante -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAgregarCita"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:tint="@color/white"
-        android:backgroundTint="@color/lilac"
-        app:srcCompat="@drawable/mas"
-        />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -78,7 +78,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-messaging:24.1.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
-
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
