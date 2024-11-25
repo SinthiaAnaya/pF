@@ -89,7 +89,7 @@ public class CitasFragment extends Fragment {
         // Botón para agregar cita
         FloatingActionButton btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
         btnAgregarCita.setOnClickListener(v -> {
-            AgregarCitaDialog dialog = new AgregarCitaDialog();
+            AgregarCitaDialog dialog = AgregarCitaDialog.newInstance("admin", null);
             dialog.setOnCitaAgregadaListener(cita -> {
                 cita.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 citasViewModel.agregarCita(cita);

@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.vsthetics.HomeImageCarouselAdapter;
 import com.example.vsthetics.Model.Servicios;
 import com.example.vsthetics.databinding.FragmentHomeBinding;
+import com.example.vsthetics.ui.citas.AgregarCitaDialog;
+import com.example.vsthetics.ui.citas.CitasViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,6 +29,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomeImageCarouselAdapter adapter;
     private List<Servicios> serviciosList = new ArrayList<>();
+    private CitasViewModel citasViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -87,11 +91,32 @@ public class HomeFragment extends Fragment {
                             }
 
                         }
+                        // Dentro del RecyclerView Adapter
                         adapter.setOnItemClickListener((imageView, servicio) -> {
                             Log.d("RecyclerView", "Clic item: " + servicio.getUid());
+
+                            // Mostrar el AgregarCitaDialog cuando un item sea clickeado
+                            AgregarCitaDialog dialog = AgregarCitaDialog.newInstance("cliente", servicio.getUid());
+                            dialog.setOnCitaAgregadaListener(cita -> {
+                                // Asegúrate de que el usuario esté autenticado
+                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                cita.setUid(userId); // Establece el UID del cliente en la cita
+
+                                // Agregar la cita usando el ViewModel o la lógica adecuada
+                                citasViewModel.agregarCita(cita);
+
+                                // Muestra un mensaje de éxito
+                                Toast.makeText(getContext(), "Cita agregada", Toast.LENGTH_SHORT).show();
+                            });
+
+                            // Mostrar el diálogo
+                            dialog.show(getChildFragmentManager(), "AgregarCitaDialog");
                         });
+
+// Configura el adapter y el RecyclerView
                         recyclerView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
+
                     }
                 });
     }

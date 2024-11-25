@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.vsthetics.Model.Citas;
 import com.example.vsthetics.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AgregarCitaDialog extends DialogFragment {
 
@@ -29,6 +34,15 @@ public class AgregarCitaDialog extends DialogFragment {
     }
 
     private OnCitaAgregadaListener listener;
+
+    public static AgregarCitaDialog newInstance(String tipoUsuario, String servicioId) {
+        AgregarCitaDialog dialog = new AgregarCitaDialog();
+        Bundle args = new Bundle();
+        args.putString("tipo_usuario", tipoUsuario); // "admin" o "cliente"
+        args.putString("servicio_id", servicioId); // ID del servicio seleccionado (para cliente)
+        dialog.setArguments(args);
+        return dialog;
+    }
 
     public void setOnCitaAgregadaListener(OnCitaAgregadaListener listener) {
         this.listener = listener;
@@ -57,6 +71,18 @@ public class AgregarCitaDialog extends DialogFragment {
         spEstado.setAdapter(adapter);
         spEstado.setSelection(1); //Pendiente como default
 
+        // Verificar si es cliente o administrador
+        String tipoUsuario = getArguments() != null ? getArguments().getString("tipo_usuario") : "admin";
+        String servicioId = getArguments() != null ? getArguments().getString("servicio_id") : null;
+
+        if ("cliente".equals(tipoUsuario)) {
+            // Obtener datos del cliente y servicio desde la base de datos
+            cargarDatosClienteYServicio(etCliente, etDescripcion, servicioId);
+
+            // Deshabilitar edición de ciertos campos
+            etCliente.setEnabled(false);
+            etDescripcion.setEnabled(false);
+        }
         // Mostrar el selector de fecha cuando el EditText de fecha se toque
         etFecha.setOnClickListener(v -> mostrarSelectorFecha(etFecha));
 
@@ -82,6 +108,41 @@ public class AgregarCitaDialog extends DialogFragment {
 
         btnCancelar.setOnClickListener(v -> dismiss());
     }
+    private void cargarDatosClienteYServicio(EditText etCliente, EditText etDescripcion, String servicioId) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // Obtener datos del cliente
+        String clienteId = auth.getCurrentUser().getUid();
+        DocumentReference clienteDoc = firestore.collection("Usuarios").document(clienteId);
+
+        clienteDoc.get().addOnCompleteListener(taskCliente -> {
+            if (taskCliente.isSuccessful() && taskCliente.getResult() != null) {
+                DocumentSnapshot clienteSnapshot = taskCliente.getResult();
+                String nombreCliente = clienteSnapshot.getString("nombre");
+
+                // Obtener datos del servicio
+                DocumentReference servicioDoc = firestore.collection("Servicios").document(servicioId);
+                servicioDoc.get().addOnCompleteListener(taskServicio -> {
+                    if (taskServicio.isSuccessful() && taskServicio.getResult() != null) {
+                        DocumentSnapshot servicioSnapshot = taskServicio.getResult();
+                        String descripcionServicio = servicioSnapshot.getString("descripcion");
+
+                        // Actualizar UI
+                        requireActivity().runOnUiThread(() -> {
+                            etCliente.setText(nombreCliente);
+                            etDescripcion.setText(descripcionServicio);
+                        });
+                    } else {
+                        Log.e("Firestore", "Error al obtener los datos del servicio: " + taskServicio.getException());
+                    }
+                });
+            } else {
+                Log.e("Firestore", "Error al obtener los datos del cliente: " + taskCliente.getException());
+            }
+        });
+    }
+
     private void mostrarSelectorFecha(EditText editTextFecha) {
         Calendar calendar = Calendar.getInstance();
         int año = calendar.get(Calendar.YEAR);
