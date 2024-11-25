@@ -22,7 +22,7 @@
     <string name="menu_logout">Cerrar Sesión</string>
     <string name="menu_gallery">Citas</string>
     <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_citascliente">Citas (Cliente)</string>
+    <string name="menu_citascliente">Mis Citas</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fab_add_appointment">Agregar nueva cita</string>
@@ -33,7 +33,16 @@
         <item>Agendado</item>
         <item>Completado</item>
     </string-array>
+
+    <string-array name="cita_estados_filtro">
+        <item>Todo</item>
+        <item>Cancelado</item>
+        <item>Pendiente</item>
+        <item>Agendado</item>
+        <item>Completado</item>
+    </string-array>
     <string-array name="filtro_fecha_opciones">
+        <item>desde el principio</item>
         <item>Hoy</item>
         <item>Esta semana</item>
         <item>Este mes</item>

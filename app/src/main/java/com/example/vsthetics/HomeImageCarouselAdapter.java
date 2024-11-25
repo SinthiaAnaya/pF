@@ -40,6 +40,7 @@ public class HomeImageCarouselAdapter extends RecyclerView.Adapter<HomeImageCaro
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Servicios servicio = serviciosList.get(position);
         String base64Image = servicio.getFoto();
+        System.out.println("la imagen\n"+base64Image);
         if (base64Image != null && !base64Image.isEmpty()) {
             try {
                 byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
