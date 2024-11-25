@@ -21,9 +21,14 @@ public class CitasViewModel extends ViewModel {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final MutableLiveData<List<Citas>> citasList = new MutableLiveData<>();
-
+    private final MutableLiveData<List<Citas>> filteredCitasList = new MutableLiveData<>();
     public CitasViewModel() {
         cargarCitasDesdeFirestore();
+        filteredCitasList.setValue(new ArrayList<>());
+    }
+
+    public LiveData<List<Citas>> getFilteredCitas() {
+        return filteredCitasList;
     }
 
     public LiveData<List<Citas>> getCitas() {
@@ -140,24 +145,45 @@ public class CitasViewModel extends ViewModel {
     }
 
     public void filtrarCitasPorFecha(String fechaFiltro) {
-        List<Citas> citasOriginales = citasList.getValue();
-        if (citasOriginales != null) {
-            List<Citas> citasFiltradas = citasOriginales.stream()
-                    .filter(cita -> cita.getFecha().equals(fechaFiltro))
+        List<Citas> originalList = citasList.getValue();
+        if(fechaFiltro != "desde el principio"){
+            if (originalList != null) {
+                List<Citas> filteredList = originalList.stream()
+                        .filter(cita -> cita.getFecha().equals(fechaFiltro))
+                        .collect(Collectors.toList());
+                filteredCitasList.setValue(filteredList);
+            }
+        }else{
+            resetFilter();
+        }
+
+    }
+
+    // Filter method for estado
+    public void filtrarCitasPorEstado(String estadoFiltro) {
+        if (citasList.getValue() == null) return; // Early exit if the list is null
+
+        if (!estadoFiltro.equals("Todo")) {
+            List<Citas> originalList = citasList.getValue();
+            List<Citas> filteredList = originalList.stream()
+                    .filter(cita -> cita.getEstado().equals(estadoFiltro))
                     .collect(Collectors.toList());
-            citasList.setValue(citasFiltradas);
+            filteredCitasList.setValue(filteredList);
+        } else {
+            // Only update if it's not already the same
+            if (!filteredCitasList.getValue().equals(citasList.getValue())) {
+                filteredCitasList.setValue(citasList.getValue());
+            }
         }
     }
 
-    public void filtrarCitasPorEstado(String estadoFiltro) {
-        List<Citas> citasOriginales = citasList.getValue();
-        if (citasOriginales != null) {
-            List<Citas> citasFiltradas = citasOriginales.stream()
-                    .filter(cita -> cita.getEstado().equals(estadoFiltro))
-                    .collect(Collectors.toList());
-            citasList.setValue(citasFiltradas);
-        }
+    public void resetFilter() {
+        filteredCitasList.setValue(citasList.getValue());
     }
+
 
 
 }
+
+
+

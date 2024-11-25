@@ -79,6 +79,20 @@ public class Citas implements Serializable {
         this.estado = estado;
     }
 
+
+    @Override
+    public String toString() {
+        return "Citas{" +
+                "id='" + id + '\'' +
+                ", cliente='" + cliente + '\'' +
+                ", fecha='" + fecha + '\'' +
+                ", hora='" + hora + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", estado='" + estado + '\'' +
+                ", uid='" + uid + '\'' +
+                '}';
+    }
+
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }

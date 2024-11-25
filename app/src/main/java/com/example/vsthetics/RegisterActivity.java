@@ -70,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         Map<String, Object> userData = new HashMap<>();
         userData.put("nombre", nombre);
         userData.put("email", email);
+        userData.put("tipo","cliente");
 
         // Guardar datos en Firestore en la colección "Usuarios"
         firestore.collection("Usuarios").document(userId)

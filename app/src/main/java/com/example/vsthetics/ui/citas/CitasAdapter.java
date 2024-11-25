@@ -20,10 +20,6 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     private List<Citas> citas = new ArrayList<>();
     private OnCitaClickListener listener;
 
-
-
-
-
     private Context context; // Contexto para operaciones específicas
 
     public CitasAdapter(Context context) {
@@ -34,6 +30,7 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     // Método para establecer la lista de citas
     public void setCitas(List<Citas> citas) {
         this.citas = citas;
+
         notifyDataSetChanged(); // Notificar cambios en la lista
     }
 
@@ -53,26 +50,28 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     public void onBindViewHolder(@NonNull CitasViewHolder holder, int position) {
         Citas cita = citas.get(position);
 
-        // Configurar datos de la cita
-        holder.tvCliente.setText(cita.getCliente());
-        holder.tvFecha.setText(cita.getFecha());
-        holder.tvHora.setText(cita.getHora());
-        holder.tvEstado.setText(cita.getEstado());
+            // Configurar datos de la cita
+            holder.itemView.setVisibility(View.VISIBLE);
+            holder.tvCliente.setText(cita.getCliente());
+            holder.tvFecha.setText(cita.getFecha());
+            holder.tvHora.setText(cita.getHora());
+            holder.tvEstado.setText(cita.getEstado());
 
-        // Configurar clic en el elemento
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onCitaClick(cita); // Notificar al listener
-            }
-        });
+            // Configurar clic en el elemento
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onCitaClick(cita); // Notificar al listener
+                }
+            });
 
-        // Configurar clic para eliminar
-        holder.itemView.setOnLongClickListener(v -> {
-            if (listener != null) {
-                listener.onCitaEliminar(cita); // Notificar al listener de eliminación
-            }
-            return true;
-        });
+            // Configurar clic para eliminar
+            holder.itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onCitaEliminar(cita); // Notificar al listener de eliminación
+                }
+                return true;
+            });
+
     }
 
     @Override

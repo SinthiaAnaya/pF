@@ -93,7 +93,15 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("this bro name is: "+document.getString("nombre"));
                         usuario.setNombre(document.getString("nombre"));
                         usuario.setCorreo(document.getString("email"));
+                        usuario.setTipo(document.getString("tipo"));
+                        if(!Objects.equals(usuario.getTipo(), "admin")){
+                            Menu menu = navigationView.getMenu();
+                            MenuItem navCitasItem = menu.findItem(R.id.nav_citas);
+                            if(navCitasItem != null){
+                                navCitasItem.setVisible(false);
+                            }
 
+                        }
                         nombreUsuarioNav.setText(usuario.getNombre());
                         correoUsuarioNav.setText(usuario.getCorreo());
                     } else {
@@ -108,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.appBarMain.toolbar);
 
 
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_citas, R.id.nav_citascliente)
                 .setOpenableLayout(drawer)
@@ -115,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
     }
 
     @Override
