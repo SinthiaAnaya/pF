@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.vsthetics.Model.Citas;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -30,6 +31,29 @@ public class CitasViewModel extends ViewModel {
     public void cargarCitasDesdeFirestore() {
         isLoading.setValue(true);
         db.collection("Citas")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Citas> citas = new ArrayList<>();
+                    queryDocumentSnapshots.forEach(document -> {
+                        Citas cita = document.toObject(Citas.class);
+                        cita.setId(document.getId());
+                        citas.add(cita);
+                    });
+                    citasList.setValue(citas); // Notifica a todos los observadores
+                    isLoading.setValue(false);
+                })
+                .addOnFailureListener(e -> {
+                    isLoading.setValue(false);
+                    Log.e("FirestoreError", "Error al cargar citas", e);
+                });
+    }
+
+    public void cargarCitasDeCliente() {
+        isLoading.setValue(true);
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        System.out.println("intentando buscar citas del uid: "+currentUserId);
+        db.collection("Citas")
+                .whereEqualTo("uid",currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Citas> citas = new ArrayList<>();

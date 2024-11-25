@@ -18,8 +18,8 @@
         tools:layout="@layout/fragment_citas" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.vsthetics.ui.servicios.ServiciosFragment"
+        android:id="@+id/nav_citascliente"
+        android:name="com.example.vsthetics.ui.citascliente.CitasClienteFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_servicios" />
 </navigation>

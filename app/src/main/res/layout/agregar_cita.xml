@@ -46,6 +46,13 @@
         android:importantForAccessibility="yes" />
 
     <!-- Botones para Guardar y Cancelar -->
+
+    <Spinner
+        android:id="@+id/spEstado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

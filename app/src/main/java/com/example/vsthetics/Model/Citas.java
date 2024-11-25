@@ -9,16 +9,21 @@ public class Citas implements Serializable {
     private String hora;
     private String descripcion;
 
+    private String estado;
+
+    private String uid;
+
     // Constructor vacío necesario para Firebase
     public Citas() {}
 
     // Constructor con parámetros
-    public Citas(String id, String cliente, String fecha, String hora, String descripcion) {
+    public Citas(String id, String cliente, String fecha, String hora, String descripcion, String estado) {
         this.id = id;
         this.cliente = cliente;
         this.fecha = fecha;
         this.hora = hora;
         this.descripcion = descripcion;
+        this.estado = estado;
     }
 
     // Getters y setters
@@ -56,6 +61,22 @@ public class Citas implements Serializable {
 
     public String getDescripcion() {
         return descripcion;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public void setDescripcion(String descripcion) {

@@ -9,8 +9,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,6 +50,12 @@ public class AgregarCitaDialog extends DialogFragment {
         EditText etDescripcion = view.findViewById(R.id.etDescripcion);
         Button btnGuardar = view.findViewById(R.id.btnGuardar);
         Button btnCancelar = view.findViewById(R.id.btnCancelar);
+        Spinner spEstado = view.findViewById(R.id.spEstado);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.cita_estados, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spEstado.setAdapter(adapter);
+        spEstado.setSelection(1); //Pendiente como default
 
         // Mostrar el selector de fecha cuando el EditText de fecha se toque
         etFecha.setOnClickListener(v -> mostrarSelectorFecha(etFecha));
@@ -59,6 +67,7 @@ public class AgregarCitaDialog extends DialogFragment {
             String fecha = etFecha.getText().toString();
             String hora = etHora.getText().toString();
             String descripcion = etDescripcion.getText().toString();
+            String estado = spEstado.getSelectedItem().toString();
 
             if (TextUtils.isEmpty(cliente) || TextUtils.isEmpty(fecha) || TextUtils.isEmpty(hora) || TextUtils.isEmpty(descripcion)) {
                 Toast.makeText(getContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
@@ -66,7 +75,7 @@ public class AgregarCitaDialog extends DialogFragment {
             }
 
             if (listener != null) {
-                listener.onCitaAgregada(new Citas(null, cliente, fecha, hora, descripcion));
+                listener.onCitaAgregada(new Citas(null, cliente, fecha, hora, descripcion, estado));
             }
             dismiss(); // Cierra el diálogo
         });
