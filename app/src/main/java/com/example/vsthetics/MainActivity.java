@@ -59,18 +59,18 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
             }
         }
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.w("FCM", "Fetching FCM registration token failed", task.getException());
-                        return;
-                    }
-                    // Get new FCM registration token
-                    String token = task.getResult();
-                    Log.d("FCM", "FCM Token: " + token);
-
-                    // You can save this token in your Firestore database or send it to your server
-                });
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(task -> {
+//                    if (!task.isSuccessful()) {
+//                        Log.w("FCM", "Fetching FCM registration token failed", task.getException());
+//                        return;
+//                    }
+//                    // Get new FCM registration token
+//                    String token = task.getResult();
+//                    Log.d("FCM", "FCM Token: " + token);
+//
+//                    // You can save this token in your Firestore database or send it to your server
+//                });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         View headerView = navigationView.getHeaderView(0);
@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setSupportActionBar(binding.appBarMain.toolbar);
-
-
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_citas, R.id.nav_citascliente, R.id.nav_pagos)
