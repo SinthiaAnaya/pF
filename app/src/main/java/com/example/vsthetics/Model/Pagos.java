@@ -6,19 +6,30 @@ public class Pagos {
     private String metodoPago;  // Método de pago (Ejemplo: "Tarjeta", "Efectivo")
     private double monto;       // Monto del pago
     private String fechaPago;   // Fecha del pago en formato String (Ejemplo: "2024-11-25")
-    private String estado;      // Estado del pago (Ejemplo: "Completado", "Pendiente")
+    private String estado;
+
+    private String cita;// Estado del pago (Ejemplo: "Completado", "Pendiente")
 
     // Constructor vacío requerido por Firestore
     public Pagos() {}
 
     // Constructor con todos los campos
-    public Pagos(String id, String usuarioId, String metodoPago, double monto, String fechaPago, String estado) {
+    public Pagos(String id, String usuarioId, String metodoPago, double monto, String fechaPago, String estado, String cita) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.metodoPago = metodoPago;
         this.monto = monto;
         this.fechaPago = fechaPago;
         this.estado = estado;
+        this.cita = cita;
+    }
+
+    public String getCita() {
+        return cita;
+    }
+
+    public void setCita(String cita) {
+        this.cita = cita;
     }
 
     // Getters y Setters
