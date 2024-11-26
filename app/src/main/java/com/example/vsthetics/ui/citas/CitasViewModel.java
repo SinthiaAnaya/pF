@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.vsthetics.Model.Citas;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -22,11 +24,14 @@ public class CitasViewModel extends ViewModel {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final MutableLiveData<List<Citas>> citasList = new MutableLiveData<>();
     private final MutableLiveData<List<Citas>> filteredCitasList = new MutableLiveData<>();
+    private MutableLiveData<List<String>> listaServicios = new MutableLiveData<>();
     public CitasViewModel() {
         cargarCitasDesdeFirestore();
         filteredCitasList.setValue(new ArrayList<>());
     }
-
+    public LiveData<List<String>> getServicios() {
+        return listaServicios;
+    }
     public LiveData<List<Citas>> getFilteredCitas() {
         return filteredCitasList;
     }
@@ -56,6 +61,7 @@ public class CitasViewModel extends ViewModel {
                     Log.e("FirestoreError", "Error al cargar citas", e);
                 });
     }
+
 
     public void cargarCitasDeCliente() {
         isLoading.setValue(true);

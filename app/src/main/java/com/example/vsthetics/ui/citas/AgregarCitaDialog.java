@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.vsthetics.Model.Citas;
+import com.example.vsthetics.Model.Servicios;
 import com.example.vsthetics.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -103,10 +104,10 @@ public class AgregarCitaDialog extends DialogFragment {
                             if (servicioNombre != null) {
                                 servicios.add(servicioNombre);
                             }
-                        }
+                        }// Obtener la lista de servicios de la base de datos
+                        List<Servicios> servicio = new ArrayList<>();
                         // Poblamos el Spinner con los datos obtenidos de Firestore
-                        ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
-                                android.R.layout.simple_spinner_item, servicios);
+                        ArrayAdapter<Servicios> servicioAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, servicio);
                         servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spServicio.setAdapter(servicioAdapter);
                     } else {
