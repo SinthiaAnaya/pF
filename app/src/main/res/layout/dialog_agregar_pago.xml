@@ -5,32 +5,31 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Spinner para seleccionar el ID de la cita -->
-    <Spinner
-        android:id="@+id/spCita"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        android:contentDescription="Seleccionar cita por ID"
-        android:layout_marginBottom="16dp" />
-
     <!-- EditText para el Monto -->
     <EditText
-        android:id="@+id/etMonto"
+        android:id="@+id/etMontos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Monto"
-        android:inputType="numberDecimal"
-        android:layout_marginTop="8dp" />
+        android:inputType="numberDecimal" />
 
     <!-- Spinner para el Método de Pago -->
     <Spinner
-        android:id="@+id/spMetodoPago"
+        android:id="@+id/spMetodoPagos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
-        android:layout_marginTop="8dp"
         android:contentDescription="Seleccionar método de pago" />
+
+    <!-- EditText para la Fecha -->
+    <EditText
+        android:id="@+id/etFechaPagos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fecha (YYYY-MM-DD)"
+        android:inputType="date"
+        android:focusable="false"
+        android:clickable="true" />
 
     <!-- Spinner para el Estado del Pago -->
     <Spinner
@@ -38,10 +37,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
-        android:layout_marginTop="8dp"
         android:contentDescription="Seleccionar estado del pago" />
 
-    <!-- Botones para Guardar y Cancelar -->
+    <!-- LinearLayout para los botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,5 +63,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
-
