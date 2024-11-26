@@ -76,6 +76,12 @@
                 android:textSize="14sp"
                 android:textColor="@color/textDarkMinimalista" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/citaFotodetalle"
+            android:layout_width="400px"
+            android:layout_height="400px"
+            card_view:srcCompat="@drawable/logo" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 

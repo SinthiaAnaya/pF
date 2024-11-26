@@ -97,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
                         if(!Objects.equals(usuario.getTipo(), "admin")){
                             Menu menu = navigationView.getMenu();
                             MenuItem navCitasItem = menu.findItem(R.id.nav_citas);
+                            MenuItem navPagosItem = menu.findItem(R.id.nav_pagos);
                             if(navCitasItem != null){
                                 navCitasItem.setVisible(false);
+                                navPagosItem.setVisible(false);
                             }
 
                         }

@@ -117,7 +117,7 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
             tvFecha = itemView.findViewById(R.id.tvFecha);
             tvHora = itemView.findViewById(R.id.tvHora);
             tvEstado = itemView.findViewById(R.id.tvEstado);
-            ivFoto = itemView.findViewById(R.id.citaImagen);
+            ivFoto = itemView.findViewById(R.id.citaFotodetalle);
         }
     }
 }
