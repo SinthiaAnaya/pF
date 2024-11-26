@@ -1,11 +1,19 @@
 package com.example.vsthetics.ui.citas;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.icu.util.Calendar;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +21,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -28,6 +39,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +51,7 @@ public class AgregarCitaDialog extends DialogFragment {
     }
 
     private OnCitaAgregadaListener listener;
+    private ActivityResultLauncher<Intent> galleryLauncher;
 
     public static AgregarCitaDialog newInstance(String tipoUsuario, String servicioId) {
         AgregarCitaDialog dialog = new AgregarCitaDialog();
@@ -70,6 +84,7 @@ public class AgregarCitaDialog extends DialogFragment {
         Button btnCancelar = view.findViewById(R.id.btnCancelar);
         Spinner spEstado = view.findViewById(R.id.spEstado);
         Spinner spServicio = view.findViewById(R.id.spTipoServicio);
+        ImageView ivFoto = view.findViewById(R.id.citaImagen);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.cita_estados, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -111,6 +126,28 @@ public class AgregarCitaDialog extends DialogFragment {
             etCliente.setEnabled(false);
             etDescripcion.setEnabled(false);
         }
+
+        ivFoto.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            galleryLauncher.launch(intent);
+        });
+
+        // Configura el lanzador
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri selectedImage = result.getData().getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImage);
+                            ivFoto.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
         // Mostrar el selector de fecha cuando el EditText de fecha se toque
         etFecha.setOnClickListener(v -> mostrarSelectorFecha(etFecha));
 
@@ -124,13 +161,23 @@ public class AgregarCitaDialog extends DialogFragment {
             String estado = spEstado.getSelectedItem().toString();
             String servicio = spServicio.getSelectedItem().toString();
 
+            BitmapDrawable drawable = (BitmapDrawable) ivFoto.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            // Convertir el Bitmap a Base64
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+            String foto = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
             if (TextUtils.isEmpty(cliente) || TextUtils.isEmpty(fecha) || TextUtils.isEmpty(hora) || TextUtils.isEmpty(descripcion)) {
                 Toast.makeText(getContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (listener != null) {
-                listener.onCitaAgregada(new Citas(null, cliente, fecha, hora, descripcion, estado, servicio));
+                listener.onCitaAgregada(new Citas(null, cliente, fecha, hora, descripcion, estado, servicio, foto));
             }
             dismiss(); // Cierra el diálogo
         });
@@ -151,7 +198,6 @@ public class AgregarCitaDialog extends DialogFragment {
                 String nombreCliente = clienteSnapshot.getString("nombre");
 
                 if ("0".equals(servicioId) || servicioId == null) {
-                    // Fetch all services if servicioId is "0" or null
                     firestore.collection("Servicios")
                             .get()
                             .addOnCompleteListener(taskServicios -> {
@@ -163,13 +209,11 @@ public class AgregarCitaDialog extends DialogFragment {
                                             serviciosList.add(nombreServicio);
                                         }
                                     }
-                                    // Set Spinner adapter with all services
                                     ArrayAdapter<String> servicioAdapter = new ArrayAdapter<>(requireContext(),
                                             android.R.layout.simple_spinner_item, serviciosList);
                                     servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     spServicio.setAdapter(servicioAdapter);
 
-                                    // Optionally, update the description field
                                     requireActivity().runOnUiThread(() -> {
                                         etCliente.setEnabled(true);
                                         etDescripcion.setEnabled(true);
@@ -179,7 +223,6 @@ public class AgregarCitaDialog extends DialogFragment {
                                 }
                             });
                 } else {
-                    // Fetch specific service by ID
                     DocumentReference servicioDoc = firestore.collection("Servicios").document(servicioId);
                     servicioDoc.get().addOnCompleteListener(taskServicio -> {
                         if (taskServicio.isSuccessful() && taskServicio.getResult() != null) {

@@ -8,6 +8,7 @@ public class Citas implements Serializable {
     private String fecha;
     private String hora;
     private String descripcion;
+    private String foto;
 
     private String estado;
 private String tipoS;
@@ -25,6 +26,17 @@ private String tipoS;
         this.descripcion = descripcion;
         this.estado = estado;
         this.tipoS = tipoS;
+    }
+
+    public Citas(String id, String cliente, String fecha, String hora, String descripcion, String estado, String tipoS, String foto) {
+        this.id = id;
+        this.cliente = cliente;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.tipoS = tipoS;
+        this.foto = foto;
     }
 
     public String getTipoS() {
@@ -88,6 +100,13 @@ private String tipoS;
         this.estado = estado;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
 
     @Override
     public String toString() {

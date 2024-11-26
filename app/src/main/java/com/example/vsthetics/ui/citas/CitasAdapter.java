@@ -1,9 +1,14 @@
 package com.example.vsthetics.ui.citas;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,6 +61,20 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
             holder.tvFecha.setText(cita.getFecha());
             holder.tvHora.setText(cita.getHora());
             holder.tvEstado.setText(cita.getEstado());
+        String base64Image = cita.getFoto();
+        System.out.println("la imagen\n"+base64Image);
+        if (base64Image != null && !base64Image.isEmpty()) {
+            try {
+                byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                holder.ivFoto.setImageBitmap(decodedBitmap);
+            } catch (IllegalArgumentException e) {
+                Log.e("ImageDecodeError", "Fallo decodificar la imagen", e);
+                holder.ivFoto.setImageResource(0);
+            }
+        } else {
+            holder.ivFoto.setImageResource(0); //en blanco
+        }
 
             // Configurar clic en el elemento
             holder.itemView.setOnClickListener(v -> {
@@ -88,6 +107,7 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
     // Clase interna ViewHolder
     static class CitasViewHolder extends RecyclerView.ViewHolder {
         TextView tvCliente, tvFecha, tvHora, tvEstado;
+        ImageView ivFoto;
 
         public CitasViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -97,6 +117,7 @@ public class CitasAdapter extends RecyclerView.Adapter<CitasAdapter.CitasViewHol
             tvFecha = itemView.findViewById(R.id.tvFecha);
             tvHora = itemView.findViewById(R.id.tvHora);
             tvEstado = itemView.findViewById(R.id.tvEstado);
+            ivFoto = itemView.findViewById(R.id.citaImagen);
         }
     }
 }
